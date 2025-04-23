@@ -12,7 +12,7 @@ def get_db():
     finally:
         db.close()
 
-@router.post("/", status_code=status.HTTP_200_OK)
+@router.post("/", status_code=status.HTTP_201_CREATED)
 def create_customer(data: dict, db: Session = Depends(get_db)):
     customer = Customer(name=data["name"])
     db.add(customer)
