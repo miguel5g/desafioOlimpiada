@@ -79,3 +79,34 @@ docker exec -it desafio-api pytest
 | Clareza e organização do código | 🟩🟩🟩 |
 | Uso correto do Git | 🟩🟩 |
 | Criatividade (melhorias extras) | 🟩 |
+
+## Problemas e soluções
+
+1. Status code incorreto
+
+Trocamos o status code no customer_controller.py, de 200 para o esperado (201)
+
+2. Nome nulo
+
+Mapeamos os dados, returando espaços desnecessários, e analisamos o conteúdo dos mesmos,
+caso encontrado nulo, retornamos o erro correspondente
+
+3. Não considerar resto da revisão
+
+O problema em questão era a não consideração do resto da divisão ao calcular o valor final.
+Foi resolvido criando uma nova variável para armazenar o resto, e somando a mesma na hora de retornar o resultado
+
+4. Intervalo negativo
+
+Foi detectado um erro no preenchimento das datas, onde a venda era realizada antes da compra, dando resultado negativo.
+Para resolver, retiramos o absoluto do cálculo de intervalo, e a partir disso criamos a exceção com base nele, caso fosse
+menor que 0(caso do problema), retorna o erro
+
+5. String onde era pra ser Float
+
+Para corrigir, foi colocado uma verificação onde se o valor fosse de algum tipo que não seja float,
+retornasse o erro esperado.
+
+6. Data futura
+
+Adicionamos uma nova API, onde possibilitamos uma previsão dos valores futuros baseado na inflação
