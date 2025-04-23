@@ -7,6 +7,10 @@ router = APIRouter(prefix="/crypto", tags=["Crypto"])
 @router.post("/{crypto}")
 async def psgft(crypto: str, data: dict):
     quantidade = data["quantidade"]
+
+    if type(quantidade) is not float:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Quantity must be an float")
+    
     data_compra = datetime.fromisoformat(data["dataCompra"])
     data_venda = datetime.fromisoformat(data["dataVenda"])
     dias = (data_venda - data_compra).days
