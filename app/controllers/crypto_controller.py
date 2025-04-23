@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, status, HTTPException
 import httpx
 from datetime import datetime
 
@@ -9,7 +9,10 @@ async def psgft(crypto: str, data: dict):
     quantidade = data["quantidade"]
     data_compra = datetime.fromisoformat(data["dataCompra"])
     data_venda = datetime.fromisoformat(data["dataVenda"])
-    dias = abs((data_venda - data_compra).days)
+    dias = (data_venda - data_compra).days
+
+    if dias < 0:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Dates cannot be negative")
 
     async with httpx.AsyncClient() as client:
         compra = await client.get(f"https://www.mercadobitcoin.net/api/{crypto}/day-summary/{data_compra.year}/{data_compra.month}/{data_compra.day}/")
