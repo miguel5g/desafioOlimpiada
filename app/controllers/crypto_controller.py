@@ -31,16 +31,17 @@ async def psgft(crypto: str, data: dict):
         compra = await client.get(f"https://www.mercadobitcoin.net/api/{crypto}/day-summary/{data_compra.year}/{data_compra.month}/{data_compra.day}/")
         venda = await client.get(f"https://www.mercadobitcoin.net/api/{crypto}/day-summary/{data_venda.year}/{data_venda.month}/{data_venda.day}/")
 
-    # if previsao:
-    #     async with httpx.AsyncClient() as client:
-    #         historico = await client.get(f"https://api.bcb.gov.br/dados/serie/bcdata.sgs.4447/dados?formato=json")
-    #         # infracao = historico[:-1]
-    #         print(historico)
+    infracao = 1
+
+    if previsao:
+        async with httpx.AsyncClient() as client:
+            historico = await client.get(f"https://api.bcb.gov.br/dados/serie/bcdata.sgs.4447/dados?formato=json")
+            infracao = 1 + historico.json()[-1]['valor']
         
-    avg_compra = compra.json()["avg_price"]
-    avg_venda = venda.json()["avg_price"]
-    valor_compra = avg_compra * quantidade
-    valor_venda = avg_venda * quantidade
+    avg_compra = compra.json()["avg_price"] * (infracao)
+    avg_venda = venda.json()["avg_price"] * (infracao)
+    valor_compra = avg_compra * quantidade * (infracao)
+    valor_venda = avg_venda * quantidade * (infracao)
     lucro = valor_venda - valor_compra
     lucro_pct = (lucro / valor_compra) * 100
 
